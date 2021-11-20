@@ -1,0 +1,3 @@
+[submodule "easy_dynamodb"]
+	path = easy_dynamodb
+	url = https://github.com/sgpx/easy_dynamodb
