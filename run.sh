@@ -1,5 +1,9 @@
 #!/bin/bash
-echo $MUSICDB_PATH
-cd $MUSICDB_PATH
-source ./venv/bin/activate
-python3 musicdb.py $@
+a=$(find . -iname venv -depth 1)
+if [ "$a" = "./venv" ]; then
+	echo found venv
+	source venv/bin/activate
+	python3 musicdb.py $@
+else
+	echo not found
+fi
