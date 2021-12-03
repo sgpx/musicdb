@@ -18,7 +18,7 @@ def print_item(x):
 
 
 def pprint(x):
-    for i in sorted(x,key = lambda y : y.get("timestamp",{}).get("S","0")  ):
+    for i in sorted(x, key=lambda y: y.get("timestamp", {}).get("S", "0")):
         print_item(i)
 
 
