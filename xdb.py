@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+import easy_dynamodb.easy_dynamodb as edb
+
+from bs4 import BeautifulSoup
+import requests
+from sys import argv
+from datetime import datetime
+
+
+def get_timestamp():
+    return str(datetime.now().isoformat())
+
+
+def print_item(x):
+    print("======")
+    for field in x:
+        print(f"{field} : '{x.get(field,{}).get('S')}'")
+
+
+def pprint(x):
+    for i in sorted(x, key=lambda y: y.get("timestamp", {}).get("S", "0")):
+        print_item(i)
+
+
+def get_title(link):
+    resp = requests.get(link).text
+    soup = BeautifulSoup(resp, features="html.parser")
+    title = soup.title.text
+    return title
+
+
+def submit_link(link, table_name="links"):
+    title = get_title(link)
+    print(title)
+    print(
+        edb.dynamodb_client.put_item(
+            TableName=table_name,
+            Item={
+                "link": {
+                    "S": link
+                },
+                "title": {
+                    "S": title if title else ""
+                },
+                "timestamp": {
+                    "S": get_timestamp()
+                }
+            },
+        ))
+
+
+def get_all_links(table_name):
+    pprint(edb.get_all_items(table_name))
+
+
+if __name__ == "__main__":
+    print(argv)
+    [link,table_name] = argv[-2],argv[-1]
+    print(argv,"link is",link,"table name is",table_name)
+
+    if link in ["-l", "--list", "list"]:
+        get_all_links(table_name=table_name)
+    else:
+        submit_link(link, table_name)
