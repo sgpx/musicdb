@@ -30,7 +30,7 @@ def get_title(link):
 
 
 def submit_link(link, table_name="links"):
-    title = get_title(link)
+    title = get_title(link).strip()
     print(title)
     print(
         edb.dynamodb_client.put_item(
