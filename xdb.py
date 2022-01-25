@@ -24,10 +24,12 @@ def pprint(x):
 
 def get_title(link):
     resp = requests.get(link).text
-    soup = BeautifulSoup(resp, features="html.parser")
-    title = soup.title.text
-    return title
-
+    try:
+        soup = BeautifulSoup(resp, features="html.parser")
+        title = soup.title.text
+        return title
+    except:
+        return link
 
 def submit_link(link, table_name="links"):
     title = get_title(link).strip()
